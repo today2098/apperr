@@ -35,12 +35,12 @@ func New(code int, body Body) *Error {
 
 // Wrap creates a new Error from status code and body and wraps err.
 func Wrap(err any, code int, body Body) *Error {
-	return wrap(err, "", code, body)
+	return wrap(err, "", code, body, 1)
 }
 
 // WrapPrefix creates a new Error from status code and body and wraps err with prefix.
 func WrapPrefix(err any, prefix string, code int, body Body) *Error {
-	return wrap(err, prefix, code, body)
+	return wrap(err, prefix, code, body, 1)
 }
 
 // Error returns a message about status code, body and the wrapped error.
@@ -70,12 +70,12 @@ func (e *Error) Is(target error) bool {
 
 // Wrap creates a new Error that copies status code and body and wraps err.
 func (e *Error) Wrap(err any) *Error {
-	return wrap(err, "", e.StatusCode, e.Body)
+	return wrap(err, "", e.StatusCode, e.Body, 1)
 }
 
 // WrapPrefix creates a new Error that copies status code and body and wraps err with prefix.
 func (e *Error) WrapPrefix(err any, prefix string) *Error {
-	return wrap(err, prefix, e.StatusCode, e.Body)
+	return wrap(err, prefix, e.StatusCode, e.Body, 1)
 }
 
 // StackFrames returns an array of StackFrame.
@@ -109,7 +109,7 @@ func (e *Error) callers(skip int) {
 	e.frames = nil
 }
 
-func wrap(err any, prefix string, code int, body Body) *Error {
+func wrap(err any, prefix string, code int, body Body, skip int) *Error {
 	res := &Error{
 		StatusCode: code,
 		Body:       body,
@@ -131,7 +131,7 @@ func wrap(err any, prefix string, code int, body Body) *Error {
 		res.prefix = fmt.Sprintf("%s: %s", prefix, res.prefix)
 	}
 
-	res.callers(2)
+	res.callers(1 + skip)
 
 	return res
 }
