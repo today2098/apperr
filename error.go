@@ -73,7 +73,7 @@ func (e *Error) Wrap(err any) *Error {
 	if e.Body == nil {
 		return wrap(err, "", e.StatusCode, nil, 1)
 	}
-	return wrap(err, "", e.StatusCode, e.Body.Copy(), 1)
+	return wrap(err, "", e.StatusCode, e.Body.Clone(), 1)
 }
 
 // WrapPrefix creates a new Error that copies status code and body and wraps err with prefix.
@@ -81,7 +81,7 @@ func (e *Error) WrapPrefix(err any, prefix string) *Error {
 	if e.Body == nil {
 		return wrap(err, prefix, e.StatusCode, nil, 1)
 	}
-	return wrap(err, prefix, e.StatusCode, e.Body.Copy(), 1)
+	return wrap(err, prefix, e.StatusCode, e.Body.Clone(), 1)
 }
 
 // StackFrames returns an array of StackFrame.
