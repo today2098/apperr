@@ -4,7 +4,7 @@ package apperr
 type Body interface {
 	// Is reports whether the Body matches target (api called in apperr.Error.Is function).
 	Is(target Body) bool
-	// Clone returns the clone (api used in apperr.Error.Wrap funtion).
+	// Clone returns the clone (api used in apperr.Error.Wrap function).
 	Clone() Body
 }
 
@@ -18,7 +18,7 @@ func (h H) Is(_ Body) bool {
 	return true
 }
 
-// Clone creates the clone (api used in apperr.Error.Wrap funtion).
+// Clone creates the clone (api used in apperr.Error.Wrap function).
 func (h H) Clone() Body {
 	clone := make(H, len(h))
 	for key, elem := range h {
