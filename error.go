@@ -60,56 +60,12 @@ func (e *Error) Is(target error) bool {
 
 // Wrap creates a new Error that copies status code and body and wraps err.
 func (e *Error) Wrap(err any) *Error {
-	res := &Error{
-		StatusCode: e.StatusCode,
-		Body:       e.Body.Copy(),
-	}
-
-	switch err := err.(type) {
-	case nil:
-		res.prefix = ""
-		res.cause = nil
-	case *Error:
-		res.prefix = err.prefix
-		res.cause = err.cause
-	case error:
-		res.prefix = ""
-		res.cause = err
-	default:
-		res.prefix = ""
-		res.cause = fmt.Errorf("%v", err)
-	}
-
-	res.callers(1)
-
-	return res
+	return wrap(err, "", e.StatusCode, e.Body)
 }
 
 // WrapPrefix creates a new Error that copies status code and body and wraps err with prefix.
 func (e *Error) WrapPrefix(err any, prefix string) *Error {
-	res := &Error{
-		StatusCode: e.StatusCode,
-		Body:       e.Body.Copy(),
-	}
-
-	switch err := err.(type) {
-	case nil:
-		res.prefix = ""
-		res.cause = nil
-	case *Error:
-		res.prefix = fmt.Sprintf("%s: %s", prefix, err.prefix)
-		res.cause = err.cause
-	case error:
-		res.prefix = prefix + ": "
-		res.cause = err
-	default:
-		res.prefix = prefix + ": "
-		res.cause = fmt.Errorf("%v", err)
-	}
-
-	res.callers(1)
-
-	return res
+	return wrap(err, prefix, e.StatusCode, e.Body)
 }
 
 // StackFrames returns an array of StackFrame.
@@ -141,4 +97,31 @@ func (e *Error) callers(skip int) {
 	len := runtime.Callers(2+skip, stack)
 	e.stack = stack[:len]
 	e.frames = nil
+}
+
+func wrap(err any, prefix string, code int, body Body) *Error {
+	res := &Error{
+		StatusCode: code,
+		Body:       body,
+	}
+
+	switch err := err.(type) {
+	case nil:
+		res.cause = nil
+	case *Error:
+		res.prefix = err.prefix
+		res.cause = err.cause
+	case error:
+		res.cause = err
+	default:
+		res.cause = fmt.Errorf("%v", err)
+	}
+
+	if prefix != "" {
+		res.prefix = fmt.Sprintf("%s: %s", prefix, res.prefix)
+	}
+
+	res.callers(2)
+
+	return res
 }
