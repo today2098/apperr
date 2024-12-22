@@ -70,12 +70,18 @@ func (e *Error) Is(target error) bool {
 
 // Wrap creates a new Error that copies status code and body and wraps err.
 func (e *Error) Wrap(err any) *Error {
-	return wrap(err, "", e.StatusCode, e.Body, 1)
+	if e.Body == nil {
+		return wrap(err, "", e.StatusCode, nil, 1)
+	}
+	return wrap(err, "", e.StatusCode, e.Body.Copy(), 1)
 }
 
 // WrapPrefix creates a new Error that copies status code and body and wraps err with prefix.
 func (e *Error) WrapPrefix(err any, prefix string) *Error {
-	return wrap(err, prefix, e.StatusCode, e.Body, 1)
+	if e.Body == nil {
+		return wrap(err, prefix, e.StatusCode, nil, 1)
+	}
+	return wrap(err, prefix, e.StatusCode, e.Body.Copy(), 1)
 }
 
 // StackFrames returns an array of StackFrame.
