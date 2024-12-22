@@ -2,11 +2,12 @@ package apperr
 
 import "runtime"
 
+// StackFrame contains information for stacktrace.
 type StackFrame struct {
-	File           string
-	Line           int
-	Function       string
-	ProgramCounter uintptr
+	File           string  // The file name
+	Line           int     // The line number
+	Function       string  // The function name
+	ProgramCounter uintptr // The program counter
 }
 
 func newStackFrames(callers []uintptr) []StackFrame {
