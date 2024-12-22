@@ -33,6 +33,16 @@ func New(code int, body Body) *Error {
 	}
 }
 
+// Wrap creates a new Error from status code and body and wraps err.
+func Wrap(err any, code int, body Body) *Error {
+	return wrap(err, "", code, body)
+}
+
+// WrapPrefix creates a new Error from status code and body and wraps err with prefix.
+func WrapPrefix(err any, prefix string, code int, body Body) *Error {
+	return wrap(err, prefix, code, body)
+}
+
 // Error returns a message about status code, body and the wrapped error.
 func (e *Error) Error() string {
 	if e.cause == nil {
