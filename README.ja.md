@@ -3,28 +3,28 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/today2098/apperr)](https://goreportcard.com/report/github.com/today2098/apperr)
 [![Go Reference](https://pkg.go.dev/badge/github.com/today2098/apperr.svg)](https://pkg.go.dev/github.com/today2098/apperr)
 
-Custom error for WEB application by Golang.
+Go による WEB アプリケーションの実装での利用を想定したカスタムエラーです．
 
-[日本語](./README.ja.md)
-
-
-## Features
-
-- Holding HTTP status code and body
-- Wrapping error
-- Stacktrace
-- Sentinel error
-- Depend on only standard library
+[English](./README.md)
 
 
-## Installation
+## 特徴
+
+- HTTPステータスコードとボディ内容を保持
+- エラーのラップ (wrap)
+- スタックトレース
+- センチネルエラー
+- 標準ライブラリのみに依存
+
+
+## インストール
 
 ```bash
 go get -u github.com/today2098/apperr
 ```
 
 
-## Usage
+## 使い方
 
 ```go
 import (
