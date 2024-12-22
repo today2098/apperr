@@ -8,7 +8,7 @@ import (
 )
 
 // The maximum depth of stackframes on any Error.
-const maxStackDepth = 32
+var MaxStackDepth = 32
 
 // Error represents an error with status code, body and stacktrace.
 type Error struct {
@@ -137,7 +137,7 @@ func (e *Error) Format(s fmt.State, verb rune) {
 }
 
 func (e *Error) callers(skip int) {
-	stack := make([]uintptr, maxStackDepth)
+	stack := make([]uintptr, MaxStackDepth)
 	len := runtime.Callers(2+skip, stack)
 	e.stack = stack[:len]
 	e.frames = nil
